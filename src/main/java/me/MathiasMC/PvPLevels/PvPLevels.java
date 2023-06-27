@@ -23,7 +23,8 @@ import javax.script.ScriptEngineManager;
 import java.sql.SQLException;
 import java.util.*;
 
-public class PvPLevels extends JavaPlugin {
+public class PvPLevels extends JavaPlugin
+{
 
     private static PvPLevels call;
 
@@ -80,7 +81,8 @@ public class PvPLevels extends JavaPlugin {
 
     private PlayerMove playerMove;
 
-    public void onEnable() {
+    public void onEnable()
+    {
         call = this;
 
         fileUtils = new FileUtils(this);
@@ -94,13 +96,17 @@ public class PvPLevels extends JavaPlugin {
         sessionManager = new SessionManager(this);
         statsManager = new StatsManager(this);
         xpManager = new XPManager(this);
-        if (getServer().getVersion().contains("1.8")) {
+        if (getServer().getVersion().contains("1.8"))
+        {
             actionBarManager = new ActionBar_1_8_R3(this);
-        } else {
+        }
+        else
+        {
             actionBarManager = new ActionBar(this);
         }
 
-        if (database.set()) {
+        if (database.set())
+        {
             getServer().getPluginManager().registerEvents(new PlayerLogin(this), this);
             getServer().getPluginManager().registerEvents(new PlayerQuit(this), this);
 
@@ -113,13 +119,15 @@ public class PvPLevels extends JavaPlugin {
             getServer().getPluginManager().registerEvents(entityDamageByEntity, this);
             getServer().getPluginManager().registerEvents(creatureSpawn, this);
 
-            if (fileUtils.config.getBoolean("blocks")) {
+            if (fileUtils.config.getBoolean("blocks"))
+            {
                 blockBreak = new BlockBreak(this);
                 blockPlace = new BlockPlace(this);
                 getServer().getPluginManager().registerEvents(blockBreak, this);
                 getServer().getPluginManager().registerEvents(blockPlace, this);
             }
-            if (fileUtils.config.getBoolean("instant-death.use")) {
+            if (fileUtils.config.getBoolean("instant-death.use"))
+            {
                 isRespawn = fileUtils.config.getBoolean("instant-death.respawn");
                 deathY = fileUtils.config.getInt("instant-death.y");
                 playerMove = new PlayerMove(this);
@@ -128,148 +136,189 @@ public class PvPLevels extends JavaPlugin {
             getCommand("pvplevels").setExecutor(new PvPLevels_Command(this));
             getCommand("pvplevels").setTabCompleter(new PvPLevels_TabComplete(this));
             new MetricsLite(this, 1174);
-            if (fileUtils.config.getBoolean("update-check")) {
-                new UpdateUtils(this, 20807).getVersion(version -> {
-                    if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
+            if (fileUtils.config.getBoolean("update-check"))
+            {
+                new UpdateUtils(this, 20807).getVersion(version ->
+                {
+                    if (this.getDescription().getVersion().equalsIgnoreCase(version))
+                    {
                         Utils.info("You are using the latest version of PvPLevels (" + getDescription().getVersion() + ")");
-                    } else {
+                    }
+                    else
+                    {
                         Utils.warning("Version: " + version + " has been released! you are currently using version: " + getDescription().getVersion());
                     }
                 });
             }
-            if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)
+            {
                 new PlaceholderAPI(this).register();
                 Utils.info("PlaceholderAPI (found)");
             }
 
-            if (fileUtils.config.contains("mysql.purge")) {
+            if (fileUtils.config.contains("mysql.purge"))
+            {
                 new Purge(this);
             }
 
             Utils.info("Created by MathiasMC");
             Utils.info(" ");
 
-            getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            getServer().getScheduler().scheduleSyncRepeatingTask(this, () ->
+            {
                 Iterator<String> iterator = new ArrayList<>(multipliers).iterator();
-                while (iterator.hasNext()) {
+                while (iterator.hasNext())
+                {
                     String uuid = iterator.next();
                     PlayerConnect playerConnect = getPlayerConnect(uuid);
                     long left = playerConnect.getMultiplierTimeLeft();
-                    if (left > 0) {
+                    if (left > 0)
+                    {
                         left--;
                         playerConnect.setMultiplierTimeLeft(left);
-                    } else {
+                    }
+                    else
+                    {
                         final PlayerLostMultiplierEvent playerLostMultiplierEvent = new PlayerLostMultiplierEvent(getServer().getOfflinePlayer(UUID.fromString(uuid)), playerConnect, playerConnect.getMultiplier(), playerConnect.getMultiplierTime());
                         playerLostMultiplierEvent.setCommands(fileUtils.language.getStringList("multiplier.lost"));
                         getServer().getPluginManager().callEvent(playerLostMultiplierEvent);
-                        if (!playerLostMultiplierEvent.isCancelled()) {
+                        if (!playerLostMultiplierEvent.isCancelled())
+                        {
                             playerLostMultiplierEvent.execute();
                         }
                     }
                 }
             }, 20, 20);
 
-        } else {
+        }
+        else
+        {
             Utils.error("Disabling plugin cannot connect to database");
             getServer().getPluginManager().disablePlugin(this);
         }
     }
 
-    public void onDisable() {
-        try {
+    public void onDisable()
+    {
+        try
+        {
             database.close();
-        } catch (SQLException exception) {
+        } catch (SQLException exception)
+        {
             Utils.exception(exception.getStackTrace(), exception.getMessage());
         }
         call = null;
     }
 
-    public static PvPLevels getInstance() {
+    public static PvPLevels getInstance()
+    {
         return call;
     }
 
-    public FileUtils getFileUtils() {
+    public FileUtils getFileUtils()
+    {
         return this.fileUtils;
     }
 
-    public XPManager getXPManager() {
+    public XPManager getXPManager()
+    {
         return this.xpManager;
     }
 
-    public ActionBarManager getActionBarManager() {
+    public ActionBarManager getActionBarManager()
+    {
         return this.actionBarManager;
     }
 
-    public SessionManager getSessionManager() {
+    public SessionManager getSessionManager()
+    {
         return sessionManager;
     }
 
-    public StatsManager getStatsManager() {
+    public StatsManager getStatsManager()
+    {
         return this.statsManager;
     }
 
-    public long getStartLevel() {
+    public long getStartLevel()
+    {
         return this.startLevel;
     }
 
-    public boolean isDebug() {
+    public boolean isDebug()
+    {
         return this.debug;
     }
 
-    public void setDebug(boolean debug) {
+    public void setDebug(boolean debug)
+    {
         this.debug = debug;
     }
 
-    public PlayerJoin getPlayerJoin() {
+    public PlayerJoin getPlayerJoin()
+    {
         return this.playerJoin;
     }
 
-    public EntityDeath getEntityDeath() {
+    public EntityDeath getEntityDeath()
+    {
         return this.entityDeath;
     }
 
-    public EntityDamageByEntity getEntityDamageByEntity() {
+    public EntityDamageByEntity getEntityDamageByEntity()
+    {
         return this.entityDamageByEntity;
     }
 
-    public CreatureSpawn getCreatureSpawn() {
+    public CreatureSpawn getCreatureSpawn()
+    {
         return this.creatureSpawn;
     }
 
-    public BlockBreak getBlockBreak() {
+    public BlockBreak getBlockBreak()
+    {
         return this.blockBreak;
     }
 
-    public BlockPlace getBlockPlace() {
+    public BlockPlace getBlockPlace()
+    {
         return this.blockPlace;
     }
 
-    public PlayerMove getPlayerMove() {
+    public PlayerMove getPlayerMove()
+    {
         return this.playerMove;
     }
 
-    public void unloadPlayerConnect(String uuid) {
-        PlayerConnect playerConnect= this.playerConnect.remove(uuid);
-        if (playerConnect != null) {
+    public void unloadPlayerConnect(String uuid)
+    {
+        PlayerConnect playerConnect = this.playerConnect.remove(uuid);
+        if (playerConnect != null)
+        {
             playerConnect.save();
         }
     }
 
-    public void updatePlayerConnect(String uuid) {
+    public void updatePlayerConnect(String uuid)
+    {
         unloadPlayerConnect(uuid);
         getPlayerConnect(uuid);
     }
 
-    public void removePlayerConnect(String uuid) {
+    public void removePlayerConnect(String uuid)
+    {
         playerConnect.remove(uuid);
     }
 
-    public ScriptEngine getScriptEngine() {
+    public ScriptEngine getScriptEngine()
+    {
         return this.scriptEngine;
     }
 
-    public PlayerConnect getPlayerConnect(String uuid) {
-        if (playerConnect.containsKey(uuid)) {
+    public PlayerConnect getPlayerConnect(String uuid)
+    {
+        if (playerConnect.containsKey(uuid))
+        {
             return playerConnect.get(uuid);
         }
         PlayerConnect playerConnect = new PlayerConnect(uuid);
@@ -277,7 +326,8 @@ public class PvPLevels extends JavaPlugin {
         return playerConnect;
     }
 
-    public Set<String> listPlayerConnect() {
+    public Set<String> listPlayerConnect()
+    {
         return playerConnect.keySet();
     }
 }

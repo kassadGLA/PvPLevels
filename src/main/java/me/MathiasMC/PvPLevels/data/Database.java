@@ -8,55 +8,73 @@ import java.io.File;
 import java.sql.*;
 import java.util.Date;
 
-public class Database {
+public class Database
+{
 
     private final PvPLevels plugin;
 
     private Connection connection;
 
-    public Database(PvPLevels plugin) {
+    public Database(PvPLevels plugin)
+    {
         this.plugin = plugin;
-        (new BukkitRunnable() {
+        (new BukkitRunnable()
+        {
             @Override
-            public void run() {
-                try {
-                    if (connection != null && !connection.isClosed()) {
+            public void run()
+            {
+                try
+                {
+                    if (connection != null && !connection.isClosed())
+                    {
                         connection.createStatement().execute("SELECT 1");
                     }
-                } catch (SQLException e) {
+                } catch (SQLException e)
+                {
                     connection = get();
                 }
             }
         }).runTaskTimerAsynchronously(plugin, 60 * 20, 60 * 20);
     }
 
-    private Connection get() {
-        try {
-            if (plugin.getFileUtils().config.getBoolean("mysql.use")) {
+    private Connection get()
+    {
+        try
+        {
+            if (plugin.getFileUtils().config.getBoolean("mysql.use"))
+            {
                 Utils.info("[Database] ( Connected ) ( MySQL )");
                 Class.forName("com.mysql.jdbc.Driver");
                 return DriverManager.getConnection("jdbc:mysql://" + plugin.getFileUtils().config.getString("mysql.host") + ":" + plugin.getFileUtils().config.getString("mysql.port") + "/" + plugin.getFileUtils().config.getString("mysql.database"), plugin.getFileUtils().config.getString("mysql.username"), plugin.getFileUtils().config.getString("mysql.password"));
-            } else {
+            }
+            else
+            {
                 Utils.info("[Database] ( Connected ) ( SQLite )");
                 Class.forName("org.sqlite.JDBC");
                 return DriverManager.getConnection("jdbc:sqlite:" + new File(plugin.getDataFolder(), "data.db"));
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (ClassNotFoundException | SQLException e)
+        {
             Utils.exception(e.getStackTrace(), e.getMessage());
             return null;
         }
     }
 
-    public void close() throws SQLException {
-        if (connection != null) {
+    public void close() throws SQLException
+    {
+        if (connection != null)
+        {
             connection.close();
         }
     }
 
-    private boolean check() throws SQLException {
-        if (connection == null || connection.isClosed()) {
+    private boolean check() throws SQLException
+    {
+        if (connection == null || connection.isClosed())
+        {
             connection = get();
-            if (connection == null || connection.isClosed()) {
+            if (connection == null || connection.isClosed())
+            {
                 return false;
             }
             connection.createStatement().execute("CREATE TABLE IF NOT EXISTS `players` (`uuid` char(36) PRIMARY KEY, `group` text(255), `kills` bigint(255), `deaths` bigint(255), `xp` bigint(255), `level` bigint(255), `killstreak` bigint(255), `killstreak_top` bigint(255), `multiplier` text(255), `lastseen` DATETIME);");
@@ -64,25 +82,34 @@ public class Database {
         return true;
     }
 
-    public boolean set() {
-        try {
+    public boolean set()
+    {
+        try
+        {
             return check();
-        } catch (SQLException e) {
+        } catch (SQLException e)
+        {
             Utils.exception(e.getStackTrace(), e.getMessage());
             return false;
         }
     }
 
-    public void insert(String uuid) {
-        if (set()) {
-            BukkitRunnable r = new BukkitRunnable() {
+    public void insert(String uuid)
+    {
+        if (set())
+        {
+            BukkitRunnable r = new BukkitRunnable()
+            {
                 @Override
-                public void run() {
+                public void run()
+                {
                     PreparedStatement preparedStatement = null;
                     ResultSet resultSet = null;
-                    try {
+                    try
+                    {
                         resultSet = connection.createStatement().executeQuery("SELECT * FROM players WHERE uuid= '" + uuid + "';");
-                        if (!resultSet.next()) {
+                        if (!resultSet.next())
+                        {
                             preparedStatement = connection.prepareStatement("INSERT INTO players (uuid, `group`, kills, deaths, xp, level, killstreak, killstreak_top, multiplier, lastseen) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
                             preparedStatement.setString(1, uuid);
                             preparedStatement.setString(2, "default");
@@ -96,9 +123,11 @@ public class Database {
                             preparedStatement.setTimestamp(10, new Timestamp(new Date().getTime()));
                             preparedStatement.executeUpdate();
                         }
-                    } catch (SQLException exception) {
+                    } catch (SQLException exception)
+                    {
                         Utils.exception(exception.getStackTrace(), exception.getMessage());
-                    } finally {
+                    } finally
+                    {
                         closeStatements(resultSet, preparedStatement);
                     }
                 }
@@ -107,23 +136,31 @@ public class Database {
         }
     }
 
-    public void delete(String uuid) {
-        if (set()) {
-            BukkitRunnable r = new BukkitRunnable() {
-                public void run() {
+    public void delete(String uuid)
+    {
+        if (set())
+        {
+            BukkitRunnable r = new BukkitRunnable()
+            {
+                public void run()
+                {
                     PreparedStatement preparedStatement = null;
                     ResultSet resultSet = null;
-                    try {
+                    try
+                    {
                         resultSet = connection.createStatement().executeQuery("SELECT * FROM players WHERE uuid= '" + uuid + "';");
-                        if (resultSet.next()) {
+                        if (resultSet.next())
+                        {
                             preparedStatement = connection.prepareStatement("DELETE FROM players WHERE uuid = ?");
                             preparedStatement.setString(1, uuid);
                             preparedStatement.executeUpdate();
                             plugin.removePlayerConnect(uuid);
                         }
-                    } catch (SQLException exception) {
+                    } catch (SQLException exception)
+                    {
                         Utils.exception(exception.getStackTrace(), exception.getMessage());
-                    } finally {
+                    } finally
+                    {
                         closeStatements(resultSet, preparedStatement);
                     }
                 }
@@ -132,15 +169,21 @@ public class Database {
         }
     }
 
-    public void setValues(String uuid, String group, long kills, long deaths, long xp, long level, long killstreak, long killstreak_top, String multiplier, Timestamp timestamp) {
-        if (set()) {
-            BukkitRunnable r = new BukkitRunnable() {
-                public void run() {
+    public void setValues(String uuid, String group, long kills, long deaths, long xp, long level, long killstreak, long killstreak_top, String multiplier, Timestamp timestamp)
+    {
+        if (set())
+        {
+            BukkitRunnable r = new BukkitRunnable()
+            {
+                public void run()
+                {
                     PreparedStatement preparedStatement = null;
                     ResultSet resultSet = null;
-                    try {
+                    try
+                    {
                         resultSet = connection.createStatement().executeQuery("SELECT * FROM players WHERE uuid= '" + uuid + "';");
-                        if (resultSet.next()) {
+                        if (resultSet.next())
+                        {
                             preparedStatement = connection.prepareStatement("UPDATE players SET `group` = ?, kills = ?, deaths = ?, xp = ?, level = ?, killstreak = ?, killstreak_top = ?, multiplier = ?, lastseen = ? WHERE uuid = ?");
                             preparedStatement.setString(1, group);
                             preparedStatement.setLong(2, kills);
@@ -154,9 +197,11 @@ public class Database {
                             preparedStatement.setString(10, uuid);
                             preparedStatement.executeUpdate();
                         }
-                    } catch (SQLException exception) {
+                    } catch (SQLException exception)
+                    {
                         Utils.exception(exception.getStackTrace(), exception.getMessage());
-                    } finally {
+                    } finally
+                    {
                         closeStatements(resultSet, preparedStatement);
                     }
                 }
@@ -165,52 +210,71 @@ public class Database {
         }
     }
 
-    public String[] getValues(String uuid) {
+    public String[] getValues(String uuid)
+    {
         Statement statement = null;
         ResultSet resultSet = null;
-        try {
+        try
+        {
             statement = connection.createStatement();
             resultSet = statement.executeQuery("SELECT * FROM players WHERE uuid= '" + uuid + "';");
-            if (resultSet.next()) {
-                return new String[]{ resultSet.getString("group"), String.valueOf(resultSet.getLong("kills")), String.valueOf(resultSet.getLong("deaths")), String.valueOf(resultSet.getLong("xp")), String.valueOf(resultSet.getLong("level")), String.valueOf(resultSet.getLong("killstreak")), String.valueOf(resultSet.getLong("killstreak_top")), resultSet.getString("multiplier"), String.valueOf(resultSet.getTimestamp("lastseen")) };
+            if (resultSet.next())
+            {
+                return new String[]{resultSet.getString("group"), String.valueOf(resultSet.getLong("kills")), String.valueOf(resultSet.getLong("deaths")), String.valueOf(resultSet.getLong("xp")), String.valueOf(resultSet.getLong("level")), String.valueOf(resultSet.getLong("killstreak")), String.valueOf(resultSet.getLong("killstreak_top")), resultSet.getString("multiplier"), String.valueOf(resultSet.getTimestamp("lastseen"))};
             }
-        } catch (SQLException exception) {
+        } catch (SQLException exception)
+        {
             Utils.exception(exception.getStackTrace(), exception.getMessage());
-        } finally {
+        } finally
+        {
             closeStatements(resultSet, statement);
         }
-        return new String[] { "default", String.valueOf(0L), String.valueOf(0L), String.valueOf(0L), String.valueOf(plugin.getStartLevel()), String.valueOf(0L), String.valueOf(0L), "0.0 0 0", String.valueOf(new Timestamp(new Date().getTime())) };
+        return new String[]{"default", String.valueOf(0L), String.valueOf(0L), String.valueOf(0L), String.valueOf(plugin.getStartLevel()), String.valueOf(0L), String.valueOf(0L), "0.0 0 0", String.valueOf(new Timestamp(new Date().getTime()))};
     }
 
-    private void closeStatements(ResultSet resultSet, PreparedStatement preparedStatement) {
-        if (resultSet != null) {
-            try {
+    private void closeStatements(ResultSet resultSet, PreparedStatement preparedStatement)
+    {
+        if (resultSet != null)
+        {
+            try
+            {
                 resultSet.close();
-            } catch (SQLException exception) {
+            } catch (SQLException exception)
+            {
                 Utils.exception(exception.getStackTrace(), exception.getMessage());
             }
         }
-        if (preparedStatement != null) {
-            try {
+        if (preparedStatement != null)
+        {
+            try
+            {
                 preparedStatement.close();
-            } catch (SQLException exception) {
+            } catch (SQLException exception)
+            {
                 Utils.exception(exception.getStackTrace(), exception.getMessage());
             }
         }
     }
 
-    private void closeStatements(ResultSet resultSet, Statement statement) {
-        if (resultSet != null) {
-            try {
+    private void closeStatements(ResultSet resultSet, Statement statement)
+    {
+        if (resultSet != null)
+        {
+            try
+            {
                 resultSet.close();
-            } catch (SQLException exception) {
+            } catch (SQLException exception)
+            {
                 Utils.exception(exception.getStackTrace(), exception.getMessage());
             }
         }
-        if (statement != null) {
-            try {
+        if (statement != null)
+        {
+            try
+            {
                 statement.close();
-            } catch (SQLException exception) {
+            } catch (SQLException exception)
+            {
                 Utils.exception(exception.getStackTrace(), exception.getMessage());
             }
         }
