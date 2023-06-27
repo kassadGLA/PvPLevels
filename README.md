@@ -5,6 +5,3 @@
 
 # PvPLevels
 PvPLevels adds levels to your minecraft server
-
-# Downloads
-[spigot](https://www.spigotmc.org/resources/pvplevels.20807/)
