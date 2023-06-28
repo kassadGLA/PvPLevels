@@ -9,27 +9,34 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Utils {
+public class Utils
+{
 
-    private static String prefix() {
+    private static String prefix()
+    {
         return "[" + PvPLevels.getInstance().getDescription().getName() + "]";
     }
 
-    public static void info(String text) {
+    public static void info(String text)
+    {
         Bukkit.getLogger().info(prefix() + " " + text);
     }
 
-    public static void warning(String text) {
+    public static void warning(String text)
+    {
         Bukkit.getLogger().warning(prefix() + " " + text);
     }
 
-    public static void error(String text) {
+    public static void error(String text)
+    {
         Bukkit.getLogger().severe(prefix() + " " + text);
     }
 
-    public static void exception(StackTraceElement[] stackTraceElement, String text) {
+    public static void exception(StackTraceElement[] stackTraceElement, String text)
+    {
         info("(!) " + prefix() + " has being encountered an error, pasting below for support (!)");
-        for (StackTraceElement traceElement : stackTraceElement) {
+        for (StackTraceElement traceElement : stackTraceElement)
+        {
             error(traceElement.toString());
         }
         info("Message: " + text);
@@ -38,50 +45,64 @@ public class Utils {
         info("(!) " + prefix() + " (!)");
     }
 
-    public static boolean isInt(String s) {
-        try {
+    public static boolean isInt(String s)
+    {
+        try
+        {
             Integer.parseInt(s);
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e)
+        {
             return false;
         }
         return true;
     }
 
-    public static boolean isLong(String s) {
-        try {
+    public static boolean isLong(String s)
+    {
+        try
+        {
             Long.parseLong(s);
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e)
+        {
             return false;
         }
         return true;
     }
 
-    public static boolean isDouble(String s) {
-        try {
+    public static boolean isDouble(String s)
+    {
+        try
+        {
             Double.parseDouble(s);
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e)
+        {
             return false;
         }
         return true;
     }
 
-    public static boolean isString(String text) {
+    public static boolean isString(String text)
+    {
         return text.matches("^[a-zA-Z]*$");
     }
 
-    public static long randomNumber(long min, long max) {
+    public static long randomNumber(long min, long max)
+    {
         return ThreadLocalRandom.current().nextLong(min, max + 1);
     }
 
-    public static long[] getDurability(ItemStack itemStack) {
-        if (itemStack != null && isValid(itemStack.getType().name())) {
+    public static long[] getDurability(ItemStack itemStack)
+    {
+        if (itemStack != null && isValid(itemStack.getType().name()))
+        {
             short max = itemStack.getType().getMaxDurability();
             return new long[]{max - itemStack.getDurability(), max};
         }
         return new long[]{0, 0};
     }
 
-    private static boolean isValid(String name) {
+    private static boolean isValid(String name)
+    {
         return name.endsWith("_HELMET")
                 || name.endsWith("_CHESTPLATE")
                 || name.endsWith("_LEGGINGS")
@@ -93,30 +114,40 @@ public class Utils {
                 || name.endsWith("SHIELD");
     }
 
-    public static ItemStack getHandItemStack(Player player, boolean main) {
+    public static ItemStack getHandItemStack(Player player, boolean main)
+    {
         ItemStack itemStack;
-        try {
-            if (main) {
+        try
+        {
+            if (main)
+            {
                 itemStack = player.getInventory().getItemInMainHand();
-            } else {
+            }
+            else
+            {
                 itemStack = player.getInventory().getItemInOffHand();
             }
-        } catch (NoSuchMethodError error) {
+        } catch (NoSuchMethodError error)
+        {
             itemStack = player.getInventory().getItemInHand();
         }
         return itemStack;
     }
 
-    public static String replacePlaceholders(OfflinePlayer offlinePlayer, boolean onlyPlaceholderAPI, String message) {
-        if (PvPLevels.getInstance().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+    public static String replacePlaceholders(OfflinePlayer offlinePlayer, boolean onlyPlaceholderAPI, String message)
+    {
+        if (PvPLevels.getInstance().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)
+        {
             message = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(offlinePlayer, message);
         }
-        if (onlyPlaceholderAPI) {
+        if (onlyPlaceholderAPI)
+        {
             return message;
         }
         String uuid = offlinePlayer.getUniqueId().toString();
         PlayerConnect playerConnect = PvPLevels.getInstance().getPlayerConnect(uuid);
-        if (message.contains("{source}") && offlinePlayer.isOnline()) {
+        if (message.contains("{source}") && offlinePlayer.isOnline())
+        {
             message = message.replace("{source}", PvPLevels.getInstance().getXPManager().getSource((Player) offlinePlayer));
         }
         return message

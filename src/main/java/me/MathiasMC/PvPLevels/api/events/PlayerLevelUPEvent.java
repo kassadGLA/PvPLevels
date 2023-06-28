@@ -10,7 +10,8 @@ import org.bukkit.event.HandlerList;
 
 import java.util.List;
 
-public class PlayerLevelUPEvent extends Event implements Cancellable {
+public class PlayerLevelUPEvent extends Event implements Cancellable
+{
     private static final HandlerList handlers = new HandlerList();
 
     private final PvPLevels plugin;
@@ -27,7 +28,8 @@ public class PlayerLevelUPEvent extends Event implements Cancellable {
 
     private List<String> commands = null;
 
-    public PlayerLevelUPEvent(final Player player, final Entity entity, final PlayerConnect playerConnect, final long level) {
+    public PlayerLevelUPEvent(final Player player, final Entity entity, final PlayerConnect playerConnect, final long level)
+    {
         this.plugin = PvPLevels.getInstance();
         this.player = player;
         this.entity = entity;
@@ -35,68 +37,83 @@ public class PlayerLevelUPEvent extends Event implements Cancellable {
         this.level = level;
     }
 
-    public Player getPlayer() {
+    public Player getPlayer()
+    {
         return this.player;
     }
 
-    public Entity getEntity() {
+    public Entity getEntity()
+    {
         return this.entity;
     }
 
-    public PlayerConnect getPlayerConnect() {
+    public PlayerConnect getPlayerConnect()
+    {
         return this.playerConnect;
     }
 
-    public long getLevel() {
+    public long getLevel()
+    {
         return this.level;
     }
 
-    public List<String> getCommands() {
+    public List<String> getCommands()
+    {
         return this.commands;
     }
 
-    public List<String> getDefaultCommands() {
+    public List<String> getDefaultCommands()
+    {
         final String path = playerConnect.getGroup() + "." + level + ".override";
-        if (!plugin.getFileUtils().levels.contains(path)) {
+        if (!plugin.getFileUtils().levels.contains(path))
+        {
             return plugin.getFileUtils().execute.getStringList(plugin.getFileUtils().levels.getString(playerConnect.getGroup() + "." + level + ".execute") + ".level.up");
         }
         return plugin.getFileUtils().execute.getStringList(plugin.getFileUtils().levels.getString(path) + ".level.up");
     }
 
-    public void setLevel(final long level) {
+    public void setLevel(final long level)
+    {
         this.level = level;
     }
 
-    public void setCommands(final List<String> commands) {
+    public void setCommands(final List<String> commands)
+    {
         this.commands = commands;
     }
 
-    public void setXp() {
+    public void setXp()
+    {
         playerConnect.setXp(plugin.getFileUtils().levels.getLong(playerConnect.getGroup() + "." + level + ".xp"));
     }
 
-    public void execute() {
+    public void execute()
+    {
         plugin.getXPManager().sendCommands(player, commands);
         playerConnect.setLevel(level);
         playerConnect.save();
     }
 
     @Override
-    public boolean isCancelled() {
+    public boolean isCancelled()
+    {
         return cancelled;
     }
 
     @Override
-    public void setCancelled(boolean set) {
+    public void setCancelled(boolean set)
+    {
         cancelled = set;
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public HandlerList getHandlers()
+    {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
+    public static HandlerList getHandlerList()
+    {
         return handlers;
     }
 }

@@ -7,21 +7,26 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-public class PlayerMove implements Listener {
+public class PlayerMove implements Listener
+{
 
     private final PvPLevels plugin;
 
-    public PlayerMove(final PvPLevels plugin) {
+    public PlayerMove(final PvPLevels plugin)
+    {
         this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onMove(PlayerMoveEvent e) {
+    public void onMove(PlayerMoveEvent e)
+    {
         final Player player = e.getPlayer();
-        if (player.getLocation().getY() <= plugin.deathY && !player.isDead()) {
+        if (player.getLocation().getY() <= plugin.deathY && !player.isDead())
+        {
             player.setLastDamageCause(null);
             player.setHealth(0D);
-            if (plugin.isRespawn) {
+            if (plugin.isRespawn)
+            {
                 player.spigot().respawn();
             }
         }

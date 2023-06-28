@@ -5,7 +5,8 @@ import me.MathiasMC.PvPLevels.PvPLevels;
 import java.sql.Timestamp;
 import java.util.*;
 
-public class PlayerConnect {
+public class PlayerConnect
+{
 
     private final String uuid;
 
@@ -41,7 +42,8 @@ public class PlayerConnect {
 
     private long xpItem = 0;
 
-    public PlayerConnect(String uuid) {
+    public PlayerConnect(String uuid)
+    {
         this.uuid = uuid;
         final String[] data = PvPLevels.getInstance().database.getValues(uuid);
         this.group = data[0];
@@ -58,139 +60,173 @@ public class PlayerConnect {
         this.time = Timestamp.valueOf(data[8]);
     }
 
-    public String getUniqueId() {
+    public String getUniqueId()
+    {
         return this.uuid;
     }
 
-    public String getGroup() {
+    public String getGroup()
+    {
         return this.group;
     }
 
-    public long getKills() {
+    public long getKills()
+    {
         return this.kills;
     }
 
-    public long getDeaths() {
+    public long getDeaths()
+    {
         return this.deaths;
     }
 
-    public long getXp() {
+    public long getXp()
+    {
         return this.xp;
     }
 
-    public long getLevel() {
+    public long getLevel()
+    {
         return this.level;
     }
 
-    public long getKillstreak() {
+    public long getKillstreak()
+    {
         return this.killstreak;
     }
 
-    public long getKillstreakTop() {
+    public long getKillstreakTop()
+    {
         return this.killstreakTop;
     }
 
-    public double getMultiplier() {
+    public double getMultiplier()
+    {
         return this.multiplier;
     }
 
-    public long getMultiplierTime() {
+    public long getMultiplierTime()
+    {
         return this.multiplierTime;
     }
 
-    public long getMultiplierTimeLeft() {
+    public long getMultiplierTimeLeft()
+    {
         return this.multiplierTimeLeft;
     }
 
-    public Timestamp getTime() {
+    public Timestamp getTime()
+    {
         return this.time;
     }
 
-    public String getXpType() {
+    public String getXpType()
+    {
         return this.xpType;
     }
 
-    public long getXpLast() {
+    public long getXpLast()
+    {
         return this.xpLast;
     }
 
-    public long getXpLost() {
+    public long getXpLost()
+    {
         return this.xpLost;
     }
 
-    public long getXpItem() {
+    public long getXpItem()
+    {
         return this.xpItem;
     }
 
-    public long getSave() {
+    public long getSave()
+    {
         return this.save;
     }
 
-    public void setGroup(final String group) {
+    public void setGroup(final String group)
+    {
         this.group = group;
     }
 
-    public void setKills(final long kills) {
+    public void setKills(final long kills)
+    {
         this.kills = kills;
     }
 
-    public void setDeaths(final long deaths) {
+    public void setDeaths(final long deaths)
+    {
         this.deaths = deaths;
     }
 
-    public void setXp(final long xp) {
+    public void setXp(final long xp)
+    {
         this.xp = xp;
     }
 
-    public void setLevel(final long level) {
+    public void setLevel(final long level)
+    {
         this.level = level;
     }
 
-    public void setKillstreak(final long killstreak) {
+    public void setKillstreak(final long killstreak)
+    {
         this.killstreak = killstreak;
     }
 
-    public void setKillstreakTop(final long killstreak_top) {
+    public void setKillstreakTop(final long killstreak_top)
+    {
         this.killstreakTop = killstreak_top;
     }
 
-    public void setMultiplier(final double multiplier) {
+    public void setMultiplier(final double multiplier)
+    {
         this.multiplier = multiplier;
     }
 
-    public void setMultiplierTime(final long multiplierTime) {
+    public void setMultiplierTime(final long multiplierTime)
+    {
         this.multiplierTime = multiplierTime;
     }
 
-    public void setMultiplierTimeLeft(final long multiplierTimeLeft) {
+    public void setMultiplierTimeLeft(final long multiplierTimeLeft)
+    {
         this.multiplierTimeLeft = multiplierTimeLeft;
     }
 
-    public void setTime() {
+    public void setTime()
+    {
         this.time = new Timestamp(new Date().getTime());
     }
 
-    public void setSave(final long save) {
+    public void setSave(final long save)
+    {
         this.save = save;
     }
 
-    public void setXpType(final String xpType) {
+    public void setXpType(final String xpType)
+    {
         this.xpType = xpType;
     }
 
-    public void setXpLast(final long xpLast) {
+    public void setXpLast(final long xpLast)
+    {
         this.xpLast = xpLast;
     }
 
-    public void setXpLost(final long xpLost) {
+    public void setXpLost(final long xpLost)
+    {
         this.xpLost = xpLost;
     }
 
-    public void setXpItem(final long xpItem) {
+    public void setXpItem(final long xpItem)
+    {
         this.xpItem = xpItem;
     }
 
-    public void startMultiplier(final double multiplier, final long seconds) {
+    public void startMultiplier(final double multiplier, final long seconds)
+    {
         setMultiplier(multiplier);
         setMultiplierTime(seconds);
         setMultiplierTimeLeft(seconds);
@@ -198,7 +234,8 @@ public class PlayerConnect {
         save();
     }
 
-    public void stopMultiplier() {
+    public void stopMultiplier()
+    {
         setMultiplier(0D);
         setMultiplierTime(0);
         setMultiplierTimeLeft(0);
@@ -206,19 +243,23 @@ public class PlayerConnect {
         save();
     }
 
-    public boolean hasMultiplier() {
+    public boolean hasMultiplier()
+    {
         return PvPLevels.getInstance().multipliers.contains(uuid) && multiplier != 0D && multiplierTime != 0;
     }
 
-    public boolean extendMultiplier(final long seconds) {
-        if (hasMultiplier()) {
+    public boolean extendMultiplier(final long seconds)
+    {
+        if (hasMultiplier())
+        {
             startMultiplier(multiplier, seconds);
             return true;
         }
         return false;
     }
 
-    public void save() {
+    public void save()
+    {
         PvPLevels.getInstance().database.setValues(uuid, group, kills, deaths, xp, level, killstreak, killstreakTop, (multiplier + " " + multiplierTime + " " + multiplierTimeLeft), time);
     }
 }

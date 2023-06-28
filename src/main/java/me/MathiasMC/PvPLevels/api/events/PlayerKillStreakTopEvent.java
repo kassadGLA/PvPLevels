@@ -9,7 +9,8 @@ import org.bukkit.event.HandlerList;
 
 import java.util.List;
 
-public class PlayerKillStreakTopEvent extends Event implements Cancellable {
+public class PlayerKillStreakTopEvent extends Event implements Cancellable
+{
     private static final HandlerList handlers = new HandlerList();
 
     private final PvPLevels plugin;
@@ -26,7 +27,8 @@ public class PlayerKillStreakTopEvent extends Event implements Cancellable {
 
     private List<String> commands = null;
 
-    public PlayerKillStreakTopEvent(final Player player, final Player killed, final PlayerConnect playerConnect, final long killstreak) {
+    public PlayerKillStreakTopEvent(final Player player, final Player killed, final PlayerConnect playerConnect, final long killstreak)
+    {
         this.plugin = PvPLevels.getInstance();
         this.player = player;
         this.killed = killed;
@@ -34,63 +36,77 @@ public class PlayerKillStreakTopEvent extends Event implements Cancellable {
         this.killstreak = killstreak;
     }
 
-    public Player getPlayer() {
+    public Player getPlayer()
+    {
         return this.player;
     }
 
-    public Player getKilled() {
+    public Player getKilled()
+    {
         return this.killed;
     }
 
-    public PlayerConnect getPlayerConnect() {
+    public PlayerConnect getPlayerConnect()
+    {
         return this.playerConnect;
     }
 
-    public long getKillstreak() {
+    public long getKillstreak()
+    {
         return this.killstreak;
     }
 
-    public List<String> getCommands() {
+    public List<String> getCommands()
+    {
         return this.commands;
     }
 
-    public List<String> getDefaultCommands() {
+    public List<String> getDefaultCommands()
+    {
         final String path = "killstreak." + playerConnect.getGroup() + "." + killstreak + ".top";
-        if (plugin.getFileUtils().config.contains(path)) {
+        if (plugin.getFileUtils().config.contains(path))
+        {
             return plugin.getFileUtils().config.getStringList(path);
         }
         return null;
     }
 
-    public void setKillstreak(final long killstreak) {
+    public void setKillstreak(final long killstreak)
+    {
         this.killstreak = killstreak;
     }
 
-    public void setCommands(final List<String> commands) {
+    public void setCommands(final List<String> commands)
+    {
         this.commands = commands;
     }
 
-    public void execute() {
+    public void execute()
+    {
         playerConnect.setKillstreakTop(killstreak);
         plugin.getXPManager().sendCommands(player, commands);
     }
 
     @Override
-    public boolean isCancelled() {
+    public boolean isCancelled()
+    {
         return cancelled;
     }
 
     @Override
-    public void setCancelled(boolean set) {
+    public void setCancelled(boolean set)
+    {
         cancelled = set;
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public HandlerList getHandlers()
+    {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
+    public static HandlerList getHandlerList()
+    {
         return handlers;
     }
 }

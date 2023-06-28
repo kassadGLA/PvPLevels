@@ -9,7 +9,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class GenerateThread extends Thread {
+public class GenerateThread extends Thread
+{
 
     private final PvPLevels plugin;
 
@@ -21,7 +22,8 @@ public class GenerateThread extends Thread {
     final FileConfiguration levels;
     final FileConfiguration execute;
 
-    public GenerateThread(final PvPLevels plugin, final String group, final long amount, final long startLevel) {
+    public GenerateThread(final PvPLevels plugin, final String group, final long amount, final long startLevel)
+    {
         this.plugin = plugin;
         this.config = plugin.getFileUtils().config;
         this.levels = plugin.getFileUtils().levels;
@@ -32,14 +34,16 @@ public class GenerateThread extends Thread {
         this.startLevel = startLevel;
     }
 
-    public void run() {
+    public void run()
+    {
         plugin.isGenerate = true;
         Utils.warning("[Generate] Be sure to check the level system, when finished to check that everything, was added correct.");
         Utils.info("[Generate] Started task...");
         long lastXP = 0;
         final String math = config.getString("generate.math");
         long size = amount + startLevel;
-        if (size == amount) {
+        if (size == amount)
+        {
             size++;
         }
         final int percent10 = (int) (size * (10.0f / 100.0f));
@@ -57,29 +61,37 @@ public class GenerateThread extends Thread {
         execute.set(group + ".level.up", config.getStringList("generate.up"));
         execute.set(group + ".level.down", config.getStringList("generate.down"));
         final LinkedHashMap<Integer, Integer> mapList = new LinkedHashMap<>();
-        for (String get : config.getConfigurationSection("generate.percent").getKeys(false)) {
+        for (String get : config.getConfigurationSection("generate.percent").getKeys(false))
+        {
             mapList.put((int) (size * (Float.parseFloat(get) / 100.0f)), Integer.parseInt(get));
         }
-        for (long i = startLevel; i < size; i++) {
-            try {
-                if (startUP) {
+        for (long i = startLevel; i < size; i++)
+        {
+            try
+            {
+                if (startUP)
+                {
                     lastXP = config.getLong("generate.start");
                     startUP = false;
                 }
                 long randomNumber = 0;
                 final String Srandom = getRandom(math);
-                if (Srandom != null) {
+                if (Srandom != null)
+                {
                     final String[] split = Srandom.split("_");
                     randomNumber = Utils.randomNumber(Long.parseLong(split[0]), Long.parseLong(split[1]));
                 }
                 final Object object = plugin.getScriptEngine().eval(math.replace("{lastXP}", String.valueOf(lastXP)).replace("{level}", String.valueOf(i)).replace("{random}", String.valueOf(random)).replace("[" + Srandom + "]", String.valueOf(randomNumber)));
-                for (Map.Entry<Integer, Integer> s : mapList.entrySet()) {
-                    if (i <= s.getKey()) {
+                for (Map.Entry<Integer, Integer> s : mapList.entrySet())
+                {
+                    if (i <= s.getKey())
+                    {
                         setLevelPath(new String[]{"prefix", "suffix", "group", "execute"}, "generate.percent." + s.getValue(), i);
                         break;
                     }
                 }
-                if (config.contains("generate.levels." + i)) {
+                if (config.contains("generate.levels." + i))
+                {
                     final String executeS = config.getString("generate.levels." + i + ".execute").replace("{group}", group).replace("{level}", String.valueOf(i));
                     levels.set(group + "." + i + ".execute", executeS);
                     execute.set(executeS + ".xp.lose", config.getStringList("generate.lose"));
@@ -87,29 +99,39 @@ public class GenerateThread extends Thread {
                     execute.set(executeS + ".level.down", config.getStringList("generate.levels." + i + ".down"));
                     Utils.info("[Generate] ( " + i + " ) has config commands ( Added )");
                 }
-                if (lastXP != 0) {
+                if (lastXP != 0)
+                {
                     levels.set(group + "." + i + ".xp", lastXP);
-                } else {
+                }
+                else
+                {
                     startUP = true;
                     levels.set(group + "." + i + ".xp", 0);
                 }
                 lastXP = Math.round(Double.parseDouble(object.toString()));
-                if (i == percent10) {
+                if (i == percent10)
+                {
                     Utils.info("[Generate] Progress: 10%");
                 }
-                if (i == percent25) {
+                if (i == percent25)
+                {
                     Utils.info("[Generate] Progress: 25%");
                 }
-                if (i == percent50) {
+                if (i == percent50)
+                {
                     Utils.info("[Generate] Progress: 50%");
                 }
-                if (i == percent75) {
+                if (i == percent75)
+                {
                     Utils.info("[Generate] Progress: 75%");
                 }
-                if (i == (size - 1)) {
+                if (i == (size - 1))
+                {
                     Utils.info("[Generate] Progress: 100%");
                 }
-            } catch (ScriptException ignored) {}
+            } catch (ScriptException ignored)
+            {
+            }
         }
         plugin.getFileUtils().saveLevels();
         plugin.getFileUtils().loadLevels();
@@ -121,15 +143,19 @@ public class GenerateThread extends Thread {
         plugin.isGenerate = false;
     }
 
-    private void setLevelPath(final String[] list, final String path, final long i) {
-        for (String test : list) {
+    private void setLevelPath(final String[] list, final String path, final long i)
+    {
+        for (String test : list)
+        {
             levels.set(group + "." + i + "." + test, config.getString(path + "." + test).replace("{group}", group).replace("{level}", String.valueOf(i)));
         }
     }
 
-    private String getRandom(final String math) {
+    private String getRandom(final String math)
+    {
         final Matcher matcher = Pattern.compile("\\[([^]]+)]").matcher(math);
-        if (matcher.find()) {
+        if (matcher.find())
+        {
             return matcher.group(1);
         }
         return null;

@@ -8,13 +8,16 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class ActionBar extends ActionBarManager {
+public class ActionBar extends ActionBarManager
+{
 
-    public ActionBar(final PvPLevels plugin) {
+    public ActionBar(final PvPLevels plugin)
+    {
         super(plugin);
     }
 
-    public void sendMessage(final Player player, final String message) {
+    public void sendMessage(final Player player, final String message)
+    {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', Utils.replacePlaceholders(player, false, message))));
     }
 }

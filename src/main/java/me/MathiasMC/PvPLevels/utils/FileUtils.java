@@ -9,7 +9,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class FileUtils {
+public class FileUtils
+{
 
     private final PvPLevels plugin;
 
@@ -25,7 +26,8 @@ public class FileUtils {
     private final File executeFile;
     public FileConfiguration execute;
 
-    public FileUtils(final PvPLevels plugin) {
+    public FileUtils(final PvPLevels plugin)
+    {
         this.plugin = plugin;
         final File pluginFolder = getFolder(plugin.getDataFolder().getPath());
         this.configFile = copyFile(pluginFolder, "config.yml");
@@ -38,57 +40,75 @@ public class FileUtils {
         loadExecute();
     }
 
-    public void loadConfig() {
+    public void loadConfig()
+    {
         config = YamlConfiguration.loadConfiguration(configFile);
     }
 
-    public void loadLanguage() {
+    public void loadLanguage()
+    {
         language = YamlConfiguration.loadConfiguration(languageFile);
     }
 
-    public void loadLevels() {
+    public void loadLevels()
+    {
         levels = YamlConfiguration.loadConfiguration(levelsFile);
     }
 
-    public void loadExecute() {
+    public void loadExecute()
+    {
         execute = YamlConfiguration.loadConfiguration(executeFile);
     }
 
-    public void saveLevels() {
-        try {
+    public void saveLevels()
+    {
+        try
+        {
             levels.save(levelsFile);
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             Utils.exception(e.getStackTrace(), e.getMessage());
         }
     }
 
-    public void saveExecute() {
-        try {
+    public void saveExecute()
+    {
+        try
+        {
             execute.save(executeFile);
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             Utils.exception(e.getStackTrace(), e.getMessage());
         }
     }
 
-    public File getFolder(final String path) {
+    public File getFolder(final String path)
+    {
         final File file = new File(path);
-        if (!file.exists()) {
+        if (!file.exists())
+        {
             file.mkdir();
         }
         return file;
     }
 
-    public File copyFile(final File folder, final String fileName) {
+    public File copyFile(final File folder, final String fileName)
+    {
         final File file = new File(folder, fileName);
-        if (!file.exists()) {
-            try {
+        if (!file.exists())
+        {
+            try
+            {
                 file.createNewFile();
-                try {
+                try
+                {
                     ByteStreams.copy(plugin.getResource(fileName), new FileOutputStream(file));
-                } catch (NullPointerException e) {
+                } catch (NullPointerException e)
+                {
                     Utils.info("cant find: " + fileName);
                 }
-            } catch (IOException exception) {
+            } catch (IOException exception)
+            {
                 Utils.error("Could not create file " + fileName);
             }
         }

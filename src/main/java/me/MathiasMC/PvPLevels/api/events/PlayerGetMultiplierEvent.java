@@ -9,7 +9,8 @@ import org.bukkit.event.HandlerList;
 
 import java.util.List;
 
-public class PlayerGetMultiplierEvent extends Event implements Cancellable {
+public class PlayerGetMultiplierEvent extends Event implements Cancellable
+{
     private static final HandlerList handlers = new HandlerList();
 
     private final PvPLevels plugin;
@@ -26,7 +27,8 @@ public class PlayerGetMultiplierEvent extends Event implements Cancellable {
 
     private List<String> commands = null;
 
-    public PlayerGetMultiplierEvent(final Player player, final PlayerConnect playerConnect, final double multiplier, final long seconds) {
+    public PlayerGetMultiplierEvent(final Player player, final PlayerConnect playerConnect, final double multiplier, final long seconds)
+    {
         this.plugin = PvPLevels.getInstance();
         this.player = player;
         this.playerConnect = playerConnect;
@@ -34,59 +36,72 @@ public class PlayerGetMultiplierEvent extends Event implements Cancellable {
         this.seconds = seconds;
     }
 
-    public Player getPlayer() {
+    public Player getPlayer()
+    {
         return this.player;
     }
 
-    public PlayerConnect getPlayerConnect() {
+    public PlayerConnect getPlayerConnect()
+    {
         return this.playerConnect;
     }
 
-    public double getMultiplier() {
+    public double getMultiplier()
+    {
         return this.multiplier;
     }
 
-    public long getSeconds() {
+    public long getSeconds()
+    {
         return this.seconds;
     }
 
-    public List<String> getCommands() {
+    public List<String> getCommands()
+    {
         return this.commands;
     }
 
-    public void setMultiplier(final double multiplier) {
+    public void setMultiplier(final double multiplier)
+    {
         this.multiplier = multiplier;
     }
 
-    public void setSeconds(final long seconds) {
+    public void setSeconds(final long seconds)
+    {
         this.seconds = seconds;
     }
 
-    public void setCommands(final List<String> commands) {
+    public void setCommands(final List<String> commands)
+    {
         this.commands = commands;
     }
 
-    public void execute() {
+    public void execute()
+    {
         playerConnect.startMultiplier(multiplier, seconds);
         plugin.getXPManager().sendCommands(player, commands);
     }
 
     @Override
-    public boolean isCancelled() {
+    public boolean isCancelled()
+    {
         return cancelled;
     }
 
     @Override
-    public void setCancelled(boolean set) {
+    public void setCancelled(boolean set)
+    {
         cancelled = set;
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public HandlerList getHandlers()
+    {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
+    public static HandlerList getHandlerList()
+    {
         return handlers;
     }
 }

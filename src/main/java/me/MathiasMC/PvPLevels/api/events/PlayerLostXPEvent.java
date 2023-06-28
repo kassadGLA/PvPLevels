@@ -10,7 +10,8 @@ import org.bukkit.event.HandlerList;
 
 import java.util.List;
 
-public class PlayerLostXPEvent extends Event implements Cancellable {
+public class PlayerLostXPEvent extends Event implements Cancellable
+{
     private static final HandlerList handlers = new HandlerList();
 
     private final PvPLevels plugin;
@@ -27,7 +28,8 @@ public class PlayerLostXPEvent extends Event implements Cancellable {
 
     private List<String> commands = null;
 
-    public PlayerLostXPEvent(final Player player, final Entity entity, final PlayerConnect playerConnect, final long xp) {
+    public PlayerLostXPEvent(final Player player, final Entity entity, final PlayerConnect playerConnect, final long xp)
+    {
         this.plugin = PvPLevels.getInstance();
         this.player = player;
         this.entity = entity;
@@ -35,69 +37,85 @@ public class PlayerLostXPEvent extends Event implements Cancellable {
         this.xp = xp;
     }
 
-    public Player getPlayer() {
+    public Player getPlayer()
+    {
         return this.player;
     }
 
-    public Entity getEntity() {
+    public Entity getEntity()
+    {
         return this.entity;
     }
 
-    public PlayerConnect getPlayerConnect() {
+    public PlayerConnect getPlayerConnect()
+    {
         return this.playerConnect;
     }
 
-    public long getXp() {
+    public long getXp()
+    {
         return this.xp;
     }
 
-    public List<String> getCommands() {
+    public List<String> getCommands()
+    {
         return this.commands;
     }
 
-    public List<String> getDefaultCommands() {
+    public List<String> getDefaultCommands()
+    {
         final String path = playerConnect.getGroup() + "." + playerConnect.getLevel() + ".override";
-        if (!plugin.getFileUtils().levels.contains(path)) {
+        if (!plugin.getFileUtils().levels.contains(path))
+        {
             return plugin.getFileUtils().execute.getStringList(plugin.getFileUtils().levels.getString(playerConnect.getGroup() + ".execute") + ".xp.lose");
         }
         return plugin.getFileUtils().execute.getStringList(plugin.getFileUtils().levels.getString(path) + ".xp.lose");
     }
 
-    public void setXp(final long xp) {
+    public void setXp(final long xp)
+    {
         this.xp = xp;
     }
 
-    public void setCommands(final List<String> commands) {
+    public void setCommands(final List<String> commands)
+    {
         this.commands = commands;
     }
 
-    public void execute() {
-        if (xp < 0) {
+    public void execute()
+    {
+        if (xp < 0)
+        {
             return;
         }
         playerConnect.setXp(xp);
         final boolean loseLevel = plugin.getXPManager().loseLevel(player, entity, playerConnect);
-        if (!loseLevel) {
+        if (!loseLevel)
+        {
             plugin.getXPManager().sendCommands(player, commands);
         }
     }
 
     @Override
-    public boolean isCancelled() {
+    public boolean isCancelled()
+    {
         return cancelled;
     }
 
     @Override
-    public void setCancelled(boolean set) {
+    public void setCancelled(boolean set)
+    {
         cancelled = set;
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public HandlerList getHandlers()
+    {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
+    public static HandlerList getHandlerList()
+    {
         return handlers;
     }
 }
